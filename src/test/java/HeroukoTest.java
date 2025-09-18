@@ -6,7 +6,7 @@ public class HeroukoTest extends TestBase {
 
 /**
  * Open Google Chrome
- * Navigate to [https://jqueryui.com/resources/demos/droppable/default.html]
+ * Navigate to [<a href="https://jqueryui.com/resources/demos/droppable/default.html">...</a>]
  * Drag [Drag me to my target] and drop it on [Drop here]
  * Assert that the text has been changed to [Dropped!]
  * Close Google Chrome

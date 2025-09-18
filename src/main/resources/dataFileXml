@@ -1,0 +1,10 @@
+<tests>
+    <test>
+        <search>Selenium WebDriver</search>
+        <url>https://www.selenium.dev/documentation/webdriver/</url>
+    </test>
+    <test>
+        <search>Cucumberio</search>
+        <url>https://www.linkedin.com</url>
+    </test>
+</tests>
