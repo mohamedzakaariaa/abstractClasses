@@ -17,7 +17,7 @@ bot.dragAndDrop(dragMe,dropHere);
     return this;
 }
 public Boolean isDropped(){
-      return bot.isdropped(droppedText);
+      return bot.isDropped(droppedText);
 
 }
 
