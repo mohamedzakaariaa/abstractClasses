@@ -3,14 +3,15 @@ package engine;
 import io.qameta.allure.Step;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jspecify.annotations.Nullable;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.io.FileHandler;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
@@ -84,13 +85,14 @@ public class WebDriverBot {
         return this;
     }
 @Step("Drag element {dragMe} and drop it on {dropHere}")
-    public void dragAndDrop(By dragMe, By dropHere) {
+    public WebDriverBot dragAndDrop(By dragMe, By dropHere) {
        wait.until(d-> {
               actions.dragAndDrop(driver.findElement(dragMe), driver.findElement(dropHere)).perform();
 
               return true;
        });
     logger.info(" Dragged element {} and dropped it on {}", dragMe, dropHere);
+    return this;
     }
 @Step("Check if element {droppedText} is dropped")
     public Boolean isDropped(By droppedText) {
@@ -99,7 +101,7 @@ public class WebDriverBot {
    return actualValue;
     }
 @Step("Check the checkbox located by {checkboxLocator}")
-    public void check(By checkboxLocator) {
+    public WebDriverBot check(By checkboxLocator) {
         wait.until(d->{
             if (!driver.findElement(checkboxLocator).isSelected()){
                 driver.findElement(checkboxLocator).click();
@@ -108,7 +110,7 @@ public class WebDriverBot {
             return true;
         });
 
-
+return this;
     }
 @Step("Check if the checkbox located by {checkLocator} is checked")
     public Boolean isChecked(By checkLocator) {
@@ -116,22 +118,35 @@ public class WebDriverBot {
     }
     @Step("Check if the checkboxes located by {checkLocator} and {checkLocator2} are both checked")
     public Boolean isTwoChecked(By checkLocator, By checkLocator2) {
-        return wait.until(d->driver.findElement(checkLocator).isSelected()&&driver.findElement(checkLocator2).isSelected());
+Boolean result= wait.until(d->driver.findElement(checkLocator).isSelected()&&driver.findElement(checkLocator2).isSelected());
+logger.info(" Are both checkboxes {} and {} checked? {}", checkLocator, checkLocator2   );
+        File source =driver.findElement( checkLocator).getScreenshotAs(OutputType.FILE);
+        File destination = new File("checkbox.png");
+        try {
+            FileHandler.copy(source,destination);
+            logger.info("Screenshot saved at {}", destination.getAbsolutePath());
+        } catch (IOException e) {
+            logger.error("Failed to save screenshot", e);
+        }
+        return result;
     }
 @Step("Get the page title")
     public String getTitle() {
-        return driver.getTitle();
+    ((FirefoxDriver)driver).getFullPageScreenshotAs(OutputType.FILE);
+        return driver.getTitle()
+                ;
     }
 @Step("Check if element {logo} is displayed")
     public boolean isDisplayed(By logo) {
         return wait.until(d->driver.findElement(logo).isDisplayed());
     }
 @Step("Search for {searchItem} using the search input located by {searchInput}")
-    public void search(By searchInput, String searchItem) {
+    public WebDriverBot search(By searchInput, String searchItem) {
         wait.until(d->{
             driver.findElement(searchInput).sendKeys(searchItem, Keys.ENTER);
             return true;
         });
+        return this;
     }
 @Step("Get the href attribute of the element located by {result}")
     public String getLink(By result) {
@@ -147,4 +162,15 @@ public class WebDriverBot {
     public String getText(By result) {
         return wait.until(d->driver.findElement(result).getText());
     }
+
+    public WebDriverBot newTab(String url) {
+        driver.switchTo().newWindow(WindowType.TAB);
+        driver.navigate().to((url));
+        return this;};
+    public  WebDriverBot newWindow(String url) {
+        driver.switchTo().newWindow(WindowType.WINDOW);
+        driver.navigate().to(url);
+        return this;};
+
+
 }

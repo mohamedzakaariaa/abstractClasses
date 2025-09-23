@@ -1,0 +1,2 @@
+"DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
+"","7344","dragAndDropTest","Default Suite","Sat Sep 20 22:34:46 EEST 2025","passed","Sat Sep 20 22:34:53 EEST 2025","HeroukoTest","abstractClasses","HeroukoTest","dragAndDropTest"
